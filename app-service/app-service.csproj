@@ -4,9 +4,8 @@
         <TargetFramework>net8.0</TargetFramework>
         <Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
-        <RootNamespace>app_service</RootNamespace>
+		<ContainerRepository>app-service</ContainerRepository>
         <UserSecretsId>62ba1d56-edc0-49ac-a832-b64ec7b370fd</UserSecretsId>
-        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)' == 'Debug'">
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
