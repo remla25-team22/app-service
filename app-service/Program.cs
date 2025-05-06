@@ -3,7 +3,7 @@ using System.Reflection;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
+builder.Logging.AddConsole();
 builder.Services.AddControllers();
 
 #if DEBUG
