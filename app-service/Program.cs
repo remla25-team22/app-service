@@ -3,17 +3,7 @@ using System.Reflection;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowAll",
-        conf =>
-        {
-            conf
-                .AllowAnyOrigin()
-                .AllowAnyMethod()
-                .AllowAnyHeader();
-        });
-});
+
 builder.Services.AddControllers();
 
 #if DEBUG
@@ -34,8 +24,6 @@ var app = builder.Build();
 
 
 app.UseHttpsRedirection();
-
-app.UseCors("AllowAll");
 
 app.MapControllers();
 
