@@ -5,13 +5,14 @@
     <title>post data</title>
 </head>
 <body>
+<label id="label">Prediction: -</label>
 <form id="myForm">
     <label>
         input:
-        <input type="text" name="Input" />
+        <input type="text" name="Input"/>
     </label>
-    <br />
-    <br />
+    <br/>
+    <br/>
     <button type="submit">Send</button>
 </form>
 
@@ -31,10 +32,13 @@
           },
           body: JSON.stringify(data),
         });
-
         if (response.ok) {
-          const result = await response.text();
-          alert('Success: ' + result);
+            const result = response.json()
+            if (result.prediction) {
+                document.getElementById('label').innerHTML = "Prediction: positive";
+            } else { 
+                document.getElementById('label').innerHTML = "Prediction: negative";
+            }
         } else {
           alert('Failed: ' + response.status);
         }
