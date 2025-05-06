@@ -1,0 +1,36 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35931.197
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "app-service", "app-service\app-service.csproj", "{B220E2D9-1028-4366-AD75-CEF9E2523C17}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8EC462FD-D22E-90A8-E5CE-7E832BA40C5D}"
+	ProjectSection(SolutionItems) = preProject
+		nuget.config = nuget.config
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "model-service-connector", "model-service.Connector\model-service-connector.csproj", "{474819D6-A9A8-467E-A098-AE2FC450DEA6}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B220E2D9-1028-4366-AD75-CEF9E2523C17}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B220E2D9-1028-4366-AD75-CEF9E2523C17}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B220E2D9-1028-4366-AD75-CEF9E2523C17}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B220E2D9-1028-4366-AD75-CEF9E2523C17}.Release|Any CPU.Build.0 = Release|Any CPU
+		{474819D6-A9A8-467E-A098-AE2FC450DEA6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{474819D6-A9A8-467E-A098-AE2FC450DEA6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{474819D6-A9A8-467E-A098-AE2FC450DEA6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{474819D6-A9A8-467E-A098-AE2FC450DEA6}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {73E82CD0-D6CF-4D36-8AE7-425E02B1A24C}
+	EndGlobalSection
+EndGlobal

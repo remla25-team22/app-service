@@ -1,0 +1,50 @@
+{
+  "definitions": {},
+  "info": {
+    "description": "powered by Flasgger",
+    "termsOfService": "/tos",
+    "title": "A swagger API",
+    "version": "0.0.1"
+  },
+  "paths": {
+    "/": {
+      "post": {
+        "parameters": [
+          {
+            "in": "body",
+            "name": "text",
+            "required": true,
+            "schema": {
+              "properties": {
+                "text": {
+                  "description": "The review text to classify",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Prediction result",
+            "schema": {
+              "properties": {
+                "prediction": {
+                  "description": "0 = negative, 1 = positive",
+                  "type": "integer"
+                }
+              },
+              "type": "object"
+            }
+          }
+        },
+        "summary": "Predict sentiment from a piece of text",
+        "tags": [
+          "Sentiment"
+        ]
+      }
+    }
+  },
+  "swagger": "2.0"
+}

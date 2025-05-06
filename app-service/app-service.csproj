@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+	<PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<ContainerRepository>app-service</ContainerRepository>
+        <UserSecretsId>62ba1d56-edc0-49ac-a832-b64ec7b370fd</UserSecretsId>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+	</PropertyGroup>
+	<ItemGroup>
+	    <PackageReference Include="lib-version" Version="1.0.0" />
+	    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.21.0" />
+	    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
+	</ItemGroup>
+	<ItemGroup>
+	  <ProjectReference Include="..\model-service.Connector\model-service-connector.csproj" />
+	</ItemGroup>
+
+</Project>
