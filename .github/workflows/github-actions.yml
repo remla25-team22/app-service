@@ -42,7 +42,7 @@ jobs:
         dotnet publish \
         --os linux \
         --arch x64 \
-        -p ContainerImageTags='"latest;v0.0.1-test.3"' \
+        -p ContainerImageTags='"latest;${{ steps.tag.outputs.version }}"' \
         -p ContainerRegistry=ghcr.io \
         -p ContainerRepository=${{ github.repository }} \
         -t:PublishContainer
