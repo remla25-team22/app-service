@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <RootNamespace>model_service-connector</RootNamespace>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+	<Target Name="NSwag" BeforeTargets="Compile" AfterTargets="Clean">
+		<Exec Command="$(NSwagExe_Net80) run ApiSpecification\model-service-connector.nswag"/>
+	</Target>
+	<ItemGroup>
+		<PackageReference Include="NSwag.ApiDescription.Client" Version="14.2.0"/>
+	</ItemGroup>
+</Project>

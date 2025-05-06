@@ -10,5 +10,5 @@ public class PredictionResponse
     /// <summary>
     ///     Prediction on the given input.
     /// </summary>
-    public required string Prediction { get; init; }
+    public required bool Prediction { get; init; }
 }

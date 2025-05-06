@@ -23,8 +23,8 @@ var app = builder.Build();
 #endif
 
 
-app.UseHttpsRedirection();
-
+//app.UseHttpsRedirection();
+app.UseStaticFiles();
 app.MapControllers();
 
 app.Run();
