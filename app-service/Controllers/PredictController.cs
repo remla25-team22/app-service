@@ -28,7 +28,6 @@ public class PredictController : ControllerBase
     [ProducesResponseType(typeof(PredictionResponse), StatusCodes.Status200OK)]
     public async Task<IActionResult> Post([FromBody] PredictionInput input)
     {
-        return Ok(new PredictionResponse{Prediction = false});
         var apiResponse = await _apiClient.AnonymousAsync(new Text{Text1 = input.Input});
         _logger.LogInformation(apiResponse.Prediction.ToString());
         PredictionResponse predictionResponse = new()
