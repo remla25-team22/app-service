@@ -1,5 +1,6 @@
 ﻿using lib_version;
 using Microsoft.AspNetCore.Mvc;
+using Prometheus;
 
 namespace app_service.Controllers;
 
@@ -7,6 +8,8 @@ namespace app_service.Controllers;
 [ApiController]
 public class VersionController : ControllerBase
 {
+    private static readonly Gauge incorrect = Metrics.CreateGauge("active_sessions", "Current active sessions");
+
     /// <summary>
     ///     Gets the current version of the API.
     /// </summary>
