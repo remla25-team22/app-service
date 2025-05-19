@@ -1,4 +1,5 @@
 ﻿using app_service.Models;
+using app_service.Util;
 using Microsoft.AspNetCore.Mvc;
 using ModelServiceConnector;
 
@@ -22,6 +23,8 @@ public class IncorrectPredictionController : ControllerBase
     [ProducesResponseType(typeof(PredictionResponse), StatusCodes.Status200OK)]
     public IActionResult Post([FromBody] IncorrectPredictionInput input)
     {
+        MetricsRegistry.IncorrectPredictions.Inc();
+        MetricsRegistry.IncorrectPredictionRate.Set(MetricsRegistry.Predictions.Value / MetricsRegistry.IncorrectPredictions.Value);
         return Ok();
     }
 }

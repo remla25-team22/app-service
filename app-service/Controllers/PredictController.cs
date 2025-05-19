@@ -1,6 +1,8 @@
 ﻿using app_service.Models;
+using app_service.Util;
 using Microsoft.AspNetCore.Mvc;
 using ModelServiceConnector;
+using Prometheus;
 
 namespace app_service.Controllers;
 
@@ -8,8 +10,9 @@ namespace app_service.Controllers;
 [ApiController]
 public class PredictController : ControllerBase
 {
-    private IApiClient _apiClient;
-    private ILogger<PredictController> _logger;
+    private readonly IApiClient _apiClient;
+    private readonly ILogger<PredictController> _logger;
+
     public PredictController(ILogger<PredictController> logger)
     {
         _logger = logger;
@@ -17,7 +20,6 @@ public class PredictController : ControllerBase
         {
             BaseAddress = new Uri("http://model-service:8080")
         });
-
     }
 
     /// <summary>
@@ -28,12 +30,19 @@ public class PredictController : ControllerBase
     [ProducesResponseType(typeof(PredictionResponse), StatusCodes.Status200OK)]
     public async Task<IActionResult> Post([FromBody] PredictionInput input)
     {
-        var apiResponse = await _apiClient.AnonymousAsync(new Text{Text1 = input.Input});
+        MetricsRegistry.Predictions.Inc();
+
+        Response apiResponse;
+        using (MetricsRegistry.PredictionResponseTime.NewTimer())
+        {
+            apiResponse = await _apiClient.AnonymousAsync(new Text { Text1 = input.Input });
+        }
+
         _logger.LogInformation(apiResponse.Prediction.ToString());
         PredictionResponse predictionResponse = new()
-            {
-                Prediction = apiResponse.Prediction == 1
-            };
+        {
+            Prediction = apiResponse.Prediction == 1
+        };
         return Ok(predictionResponse);
     }
 }

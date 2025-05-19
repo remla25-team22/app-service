@@ -1,5 +1,5 @@
 using System.Reflection;
-using System.Text.Json.Serialization;
+using Prometheus;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -28,5 +28,6 @@ app.UseSwaggerUI();
 //app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.MapControllers();
+app.MapMetrics();
 
 app.Run();
