@@ -16,4 +16,8 @@ public static class MetricsRegistry
     public static readonly Histogram PredictionResponseTime =
         Metrics.CreateHistogram("prediction_response_times", "Backend prediction response time in seconds");
 
+    public static void UpdateIncorrectGauge()
+    {
+        IncorrectPredictionRate.Set(IncorrectPredictions.Value/Predictions.Value);
+    }
 }

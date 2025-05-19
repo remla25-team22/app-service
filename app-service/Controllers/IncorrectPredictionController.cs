@@ -24,7 +24,7 @@ public class IncorrectPredictionController : ControllerBase
     public IActionResult Post([FromBody] IncorrectPredictionInput input)
     {
         MetricsRegistry.IncorrectPredictions.Inc();
-        MetricsRegistry.IncorrectPredictionRate.Set(MetricsRegistry.Predictions.Value / MetricsRegistry.IncorrectPredictions.Value);
+        MetricsRegistry.UpdateIncorrectGauge();
         return Ok();
     }
 }

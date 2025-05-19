@@ -9,7 +9,7 @@
 <form id="myForm">
     <label>
         input:
-        <input type="text" name="Input" onchange="textFieldChange()"/>
+        <input type="text" name="Input" onchange="removeReviewText()"/>
     </label>
     <br/>
     <br/>
@@ -67,7 +67,7 @@
             }
         });
 
-    function textFieldChange(){
+    function removeReviewText(){
         document.getElementById("cross").style.display = "none";
         document.getElementById("check").style.display = "none";
         document.getElementById('response').innerHTML = "";
@@ -84,6 +84,7 @@
                 },
                 body: JSON.stringify({ "input": inputText, "isPositive": isPositive }),
             });
+            removeReviewText();
         } catch (err) {
             console.error('Error:', err);
             alert('Network error');

@@ -19,7 +19,7 @@ public class PredictController(ILogger<PredictController> logger, IApiClient api
     public async Task<IActionResult> Post([FromBody] PredictionInput input)
     {
         MetricsRegistry.Predictions.Inc();
-
+        MetricsRegistry.UpdateIncorrectGauge();
         Response apiResponse;
         using (MetricsRegistry.PredictionResponseTime.NewTimer())
         {
