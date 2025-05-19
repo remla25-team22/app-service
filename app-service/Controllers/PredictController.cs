@@ -6,11 +6,11 @@ namespace app_service.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class PredictionController : ControllerBase
+public class PredictController : ControllerBase
 {
     private IApiClient _apiClient;
-    private ILogger<PredictionController> _logger;
-    public PredictionController(ILogger<PredictionController> logger)
+    private ILogger<PredictController> _logger;
+    public PredictController(ILogger<PredictController> logger)
     {
         _logger = logger;
         _apiClient = new ApiClient(new HttpClient
@@ -28,6 +28,7 @@ public class PredictionController : ControllerBase
     [ProducesResponseType(typeof(PredictionResponse), StatusCodes.Status200OK)]
     public async Task<IActionResult> Post([FromBody] PredictionInput input)
     {
+        return Ok(new PredictionResponse{Prediction = false});
         var apiResponse = await _apiClient.AnonymousAsync(new Text{Text1 = input.Input});
         _logger.LogInformation(apiResponse.Prediction.ToString());
         PredictionResponse predictionResponse = new()
