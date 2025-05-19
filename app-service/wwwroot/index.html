@@ -1,52 +1,97 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
+    <meta charset="UTF-8"/>
     <title>post data</title>
 </head>
 <body>
-<label id="label">Prediction: -</label>
+<label id="label">Please leave your review here: </label>
 <form id="myForm">
     <label>
         input:
-        <input type="text" name="Input"/>
+        <input type="text" name="Input" onchange="removeReviewText()"/>
     </label>
     <br/>
     <br/>
     <button type="submit">Send</button>
 </form>
+<br/>
+<span id="cross" style="color:red; display:none;"> &#10007;</span>
+<span id="check" style="color:lawngreen; display:none;"> &#10004;</span>
+<label id="response"></label>
+<br/>
+<button id="incorrectButton"style="display:none"></button>
+
 
 <script>
-    document.getElementById('myForm').addEventListener('submit', async function (e) {
-      e.preventDefault(); // prevent the default page reload
+    document.getElementById("incorrectButton").onclick = async () => {
+        await incorrectResponse();
+    };
+        document.getElementById('myForm').addEventListener('submit', async function (e) {
+            e.preventDefault(); // prevent the default page reload
 
-      const form = e.target;
-      const formData = new FormData(form);
-      const data = Object.fromEntries(formData.entries());
+            const form = e.target;
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData.entries());
 
-      try {
-        const response = await fetch('/api/prediction', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(data),
-        });
-        if (response.ok) {
-            const result = await response.json()
-            if (result.prediction) {
-                document.getElementById('label').innerHTML = "Prediction: positive";
-            } else { 
-                document.getElementById('label').innerHTML = "Prediction: negative";
+            try {
+                const response = await fetch('/api/predict', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data),
+                });
+                if (response.ok) {
+                    const result = await response.json()
+                    if (result.prediction) {
+                        document.getElementById("check").style.display = "inline";
+                        document.getElementById('response').innerHTML = "Thank you for your positive review!";
+                        document.getElementById('incorrectButton').innerHTML = "This review was negative";
+                        isPositive = true;
+                    } else {
+                        document.getElementById("cross").style.display = "inline";
+                        document.getElementById('response').innerHTML = "Thank you for your negative review!";
+                        document.getElementById('incorrectButton').innerHTML = "This review was positive";
+                        isPositive = false;
+                    }
+                    document.getElementById("incorrectButton").style.display = "inline";
+
+                    inputText = data.Input;
+                } else {
+                    alert('Failed: ' + response.status);
+                }
+            } catch (err) {
+                console.error('Error:', err);
+                alert('Network error');
             }
-        } else {
-          alert('Failed: ' + response.status);
+        });
+
+    function removeReviewText(){
+        document.getElementById("cross").style.display = "none";
+        document.getElementById("check").style.display = "none";
+        document.getElementById('response').innerHTML = "";
+        document.getElementById("incorrectButton").style.display = "none";
+
+    }
+
+    async function incorrectResponse() {
+        try {
+            const response = await fetch('/api/incorrectPrediction', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ "input": inputText, "isPositive": isPositive }),
+            });
+            removeReviewText();
+        } catch (err) {
+            console.error('Error:', err);
+            alert('Network error');
         }
-      } catch (err) {
-        console.error('Error:', err);
-        alert('Network error');
-      }
-    });
-    </script>
+    }
+
+
+</script>
 </body>
 </html>

@@ -1,5 +1,6 @@
 ﻿using lib_version;
 using Microsoft.AspNetCore.Mvc;
+using Prometheus;
 
 namespace app_service.Controllers;
 
