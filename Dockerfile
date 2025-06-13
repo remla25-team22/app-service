@@ -1,11 +1,15 @@
-
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /app
 
 COPY app-service.sln ./
 COPY app-service ./app-service
 COPY model-service.Connector ./model-service.Connector
-RUN git clone --depth 1 --branch v1.0.0 https://github.com/remla25-team22/lib-version.git ./lib-version
+
+RUN dotnet nuget add source "https://nuget.pkg.github.com/remla25-team22/index.json" \
+    --name github \
+    --username x-access-token \
+    --password ${{GITHUB_TOKEN:-ghp_placeholder}} \
+    --store-password-in-clear-text
 
 RUN dotnet restore
 RUN dotnet publish ./app-service/app-service.csproj -c Release -o out
