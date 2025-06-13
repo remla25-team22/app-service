@@ -1,6 +1,8 @@
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /app
 
+ARG NUGET_AUTH_TOKEN
+
 COPY app-service.sln ./
 COPY app-service ./app-service
 COPY model-service.Connector ./model-service.Connector
@@ -8,7 +10,7 @@ COPY model-service.Connector ./model-service.Connector
 RUN dotnet nuget add source "https://nuget.pkg.github.com/remla25-team22/index.json" \
     --name github \
     --username x-access-token \
-    --password ${{GITHUB_TOKEN:-ghp_placeholder}} \
+    --password $NUGET_AUTH_TOKEN \
     --store-password-in-clear-text
 
 RUN dotnet restore
