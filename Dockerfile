@@ -7,7 +7,7 @@ COPY app-service.sln ./
 COPY app-service ./app-service
 COPY model-service.Connector ./model-service.Connector
 
-RUN dotnet nuget add source "https://nuget.pkg.github.com/remla25-team22/lib-version/index.json" \
+RUN dotnet nuget add source "https://nuget.pkg.github.com/remla25-team22/index.json" \
     --name github \
     --username x-access-token \
     --password $NUGET_AUTH_TOKEN \
