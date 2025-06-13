@@ -1,48 +1,53 @@
+name: Release App Service to GHCR
+
 on:
   push:
     tags:
-      - 'v*'
-      
+      - 'v*.*.*'
+
+permissions:
+  contents: read
+  packages: write
+
 jobs:
   publish:
     runs-on: ubuntu-latest
-    permissions:
-      packages: write
-      contents: read
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Extract version from tag
-      id: tag
-      run: echo "version=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
-        
-    - name: Set up .NET
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: 8.x
-    - name: Configure GitHub Packages NuGet source
-      run: |
-        dotnet nuget add source "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json" \
-        --name github \
-        --username x-access-token \
-        --password ${{ secrets.GITHUB_TOKEN }} \
-        --store-password-in-clear-text
-      
-    - name: Log in to GHCR
-      uses: docker/login-action@v3
-      with:
-        registry: ghcr.io
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Extract version from tag
+        id: tag
+        run: echo "version=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
 
-    - name: Publish container to GHCR
-      run: |
-        dotnet publish \
-        --os linux \
-        --arch x64 \
-        -p ContainerImageTags='"latest;${{ steps.tag.outputs.version }}"' \
-        -p ContainerRegistry=ghcr.io \
-        -p ContainerRepository=${{ github.repository }} \
-        -t:PublishContainer
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.x
+
+      - name: Configure GitHub Packages NuGet source
+        run: |
+          dotnet nuget add source "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json"             --name github             --username x-access-token             --password ${{ secrets.GITHUB_TOKEN }}             --store-password-in-clear-text
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Publish multi-arch container to GHCR
+        run: |
+          IMAGE="ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}"
+          IMAGE="${IMAGE,,}"
+          docker buildx create --use
+          docker buildx build             --platform linux/amd64,linux/arm64             --tag $IMAGE:${{ steps.tag.outputs.version }}             --push .
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ steps.tag.outputs.version }}
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
