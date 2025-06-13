@@ -5,7 +5,7 @@ WORKDIR /app
 COPY app-service.sln ./
 COPY app-service ./app-service
 COPY model-service.Connector ./model-service.Connector
-COPY lib-version ./lib-version
+RUN git clone --depth 1 --branch v1.0.0 https://github.com/remla25-team22/lib-version.git ./lib-version
 
 RUN dotnet restore
 RUN dotnet publish ./app-service/app-service.csproj -c Release -o out
