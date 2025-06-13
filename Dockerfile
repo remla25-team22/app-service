@@ -2,14 +2,16 @@
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /app
 
-COPY . ./
-RUN dotnet restore
+COPY app-service.sln ./
+COPY app-service ./app-service
+COPY model-service.Connector ./model-service.Connector
+COPY lib-version ./lib-version
 
-RUN dotnet publish -c Release -o out
+RUN dotnet restore
+RUN dotnet publish ./app-service/app-service.csproj -c Release -o out
 
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
 WORKDIR /app
-
 COPY --from=build /app/out ./
 
 ENV BackendUrl=http://localhost:8081
