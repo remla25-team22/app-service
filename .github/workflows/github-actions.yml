@@ -75,12 +75,12 @@ jobs:
       - name: Publish container to GHCR
         run: |
           dotnet publish \
-            --os linux \
-            --arch x64 \
-            -p ContainerImageTags="latest;${{ steps.tag.outputs.version || env.VERSION_CLEANED }}" \
-            -p ContainerRegistry=ghcr.io \
-            -p ContainerRepository=${{ github.repository_owner }}/app-service \
-            -t:PublishContainer app-service/app-service.csproj
+          --os linux \
+          --arch x64 \
+          -p ContainerImageTags='"latest;${{ steps.tag.outputs.version }}"' \
+          -p ContainerRegistry=ghcr.io \
+          -p ContainerRepository=${{ github.repository }} \
+          -t:PublishContainer
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
