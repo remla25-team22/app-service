@@ -1,4 +1,4 @@
-name: Full Auto Release App Service (.NET-native container)
+name: Full Auto Release App Service (.NET-native)
 
 on:
   push:
@@ -72,15 +72,15 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Publish container using dotnet
+      - name: Publish container to GHCR
         run: |
-          dotnet publish app-service/app-service.csproj \
-            -c Release \
-            -p:PublishProfile=DefaultContainer \
-            -p:ContainerImageTags="latest;${{ steps.tag.outputs.version || env.VERSION_CLEANED }}" \
-            -p:ContainerRegistry="ghcr.io" \
-            -p:ContainerRepository="${{ github.repository_owner }}/app-service" \
-            -t:PublishContainer
+          dotnet publish \
+            --os linux \
+            --arch x64 \
+            -p ContainerImageTags="latest;${{ steps.tag.outputs.version || env.VERSION_CLEANED }}" \
+            -p ContainerRegistry=ghcr.io \
+            -p ContainerRepository=${{ github.repository_owner }}/app-service \
+            -t:PublishContainer app-service/app-service.csproj
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
@@ -105,4 +105,4 @@ jobs:
         run: |
           git add VERSION.txt
           git commit -m "Bump version to ${{ env.NEXT_VERSION }} after release ${{ env.VERSION }}"
-          git push origin main || echo "Push failed (likely due to branch protection)"
+          git push origin main || echo "Push blocked (e.g. branch protection)"
