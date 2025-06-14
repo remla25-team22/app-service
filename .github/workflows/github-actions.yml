@@ -1,9 +1,7 @@
-name: Full Auto Release App Service
+name: Release App Service (No Dockerfile)
 
 on:
   push:
-    branches:
-      - main
     tags:
       - 'v*.*.*'
 
@@ -12,22 +10,29 @@ permissions:
   packages: write
 
 jobs:
-  release:
+  publish:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Git
-        run: |
-          git config user.name "github-actions"
-          git config user.email "github-actions@github.com"
-
       - name: Set up .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 8.x
+          dotnet-version: '8.x'
+
+      - name: Extract version from tag
+        id: extract_tag
+        run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+
+      - name: Configure NuGet for GitHub Packages
+        run: |
+          dotnet nuget add source "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json" \
+            --name github \
+            --username x-access-token \
+            --password ${{ secrets.GITHUB_TOKEN }} \
+            --store-password-in-clear-text
 
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v3
@@ -36,70 +41,11 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Read version from VERSION.txt
-        if: github.ref == 'refs/heads/main'
-        id: version_main
+      - name: Publish container image using dotnet
         run: |
-          VERSION=$(cat VERSION.txt)
-          if [[ -z "$VERSION" ]]; then
-            echo "VERSION.txt is empty. Aborting."
-            exit 1
-          fi
-          echo "VERSION=$VERSION" >> $GITHUB_ENV
-          VERSION_CLEANED="${VERSION#v}"
-          echo "VERSION_CLEANED=$VERSION_CLEANED" >> $GITHUB_ENV
-
-      - name: Tag and push release (only on main)
-        if: github.ref == 'refs/heads/main'
-        run: |
-          if git ls-remote --tags origin | grep -q "refs/tags/${{ env.VERSION }}"; then
-            echo "Tag already exists. Skipping."
-            exit 0
-          fi
-          git tag ${{ env.VERSION }}
-          git push origin ${{ env.VERSION }}
-
-      - name: Extract version from tag
-        if: startsWith(github.ref, 'refs/tags/')
-        id: tag
-        run: echo "version=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
-
-      - name: Set image name
-        run: |
-          IMAGE="ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}"
-          IMAGE="${IMAGE,,}"
-          echo "IMAGE=$IMAGE" >> $GITHUB_ENV
-
-      - name: Publish multi-arch container to GHCR
-        run: |
-          docker buildx create --use
-          docker buildx build \
-            --platform linux/amd64,linux/arm64 \
-            --build-arg NUGET_AUTH_TOKEN=${{ secrets.GITHUB_TOKEN }} \
-            --tag $IMAGE:${{ steps.tag.outputs.version || env.VERSION_CLEANED }} \
-            --push .
-
-      - name: Create GitHub Release
-        uses: softprops/action-gh-release@v1
-        with:
-          tag_name: ${{ steps.tag.outputs.version || env.VERSION }}
-          generate_release_notes: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Bump to next patch pre-release (only on main)
-        if: github.ref == 'refs/heads/main'
-        run: |
-          VERSION=${{ env.VERSION }}
-          IFS='.' read -r MAJOR MINOR PATCH <<< "${VERSION#v}"
-          NEXT_PATCH=$((PATCH + 1))
-          NEXT_VERSION="v${MAJOR}.${MINOR}.${NEXT_PATCH}-pre"
-          echo "$NEXT_VERSION" > VERSION.txt
-          echo "NEXT_VERSION=$NEXT_VERSION" >> $GITHUB_ENV
-
-      - name: Commit and push version bump (only on main)
-        if: github.ref == 'refs/heads/main'
-        run: |
-          git add VERSION.txt
-          git commit -m "Bump version to ${{ env.NEXT_VERSION }} after release ${{ env.VERSION }}"
-          git push origin main || echo "Push failed (likely due to branch protection)"
+          dotnet publish app-service/app-service.csproj \
+            -c Release \
+            -p:ContainerImageTags="latest;${{ env.VERSION }}" \
+            -p:ContainerRegistry="ghcr.io" \
+            -p:ContainerRepository="${{ github.repository_owner }}/app-service" \
+            -t:PublishContainer
