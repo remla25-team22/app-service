@@ -77,7 +77,7 @@ jobs:
           dotnet publish \
             --os linux \
             --arch x64 \
-            -p:ContainerImageTags="latest;${{ env.VERSION_CLEANED }}" \
+            -p:ContainerImageTags="latest%3B${{ env.VERSION_CLEANED }}" \
             -p:ContainerRegistry=ghcr.io \
             -p:ContainerRepository=${{ github.repository_owner }}/app-service \
             -t:PublishContainer app-service/app-service.csproj
