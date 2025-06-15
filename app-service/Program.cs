@@ -9,7 +9,6 @@ builder.Services.AddSingleton<IApiClient>(_ => new ApiClient(new HttpClient{Base
 builder.Logging.AddConsole();
 builder.Services.AddControllers();
 
-#if DEBUG
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(opt =>
 {
@@ -17,15 +16,12 @@ builder.Services.AddSwaggerGen(opt =>
     string xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
     opt.IncludeXmlComments(xmlPath);
 });
-#endif
 
 WebApplication app = builder.Build();
 
 
-#if DEBUG
 app.UseSwagger();
 app.UseSwaggerUI();
-#endif
 
 //app.UseHttpsRedirection();
 app.UseStaticFiles();
