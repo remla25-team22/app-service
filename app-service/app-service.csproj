@@ -2,7 +2,7 @@
 
 	<PropertyGroup>
         <TargetFramework>net8.0</TargetFramework>
-		<Version>1.2.0</Version>
+		<Version>1..0</Version>
         <Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<ContainerRepository>app-service</ContainerRepository>
@@ -12,7 +12,7 @@
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 	</PropertyGroup>
 	<ItemGroup>
-	    <PackageReference Include="lib-version" Version="1.0.0" />
+	    <PackageReference Include="lib-version" Version="1.0.1-pre" />
 	    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.21.0" />
 	    <PackageReference Include="prometheus-net.AspNetCore" Version="8.2.1" />
 	    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
