@@ -14,6 +14,7 @@ builder.Services.AddEndpointsApiExplorer();
 WebApplication app = builder.Build();
 
 
+
 //app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.MapControllers();
