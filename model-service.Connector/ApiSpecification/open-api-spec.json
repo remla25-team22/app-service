@@ -44,6 +44,28 @@
           "Sentiment"
         ]
       }
+    },
+    "/version/model": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "Semantic Version",
+            "schema": {
+              "properties": {
+                "version": {
+                  "description": "semantic version",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          }
+        },
+        "summary": "Returns the model-service\u2019s current version.",
+        "tags": [
+          "Version"
+        ]
+      }
     }
   },
   "swagger": "2.0"

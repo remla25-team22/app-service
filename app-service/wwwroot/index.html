@@ -5,6 +5,9 @@
     <title>post data</title>
 </head>
 <body>
+    <label id="version">App Version:</label> <br/>
+<label id="model-service-version">Model Version: </label><br/>
+
 <label id="label">Please leave your review here: </label>
 <form id="myForm">
     <label>
@@ -20,13 +23,18 @@
 <span id="check" style="color:lawngreen; display:none;"> &#10004;</span>
 <label id="response"></label>
 <br/>
-<button id="incorrectButton"style="display:none"></button>
+<button id="incorrectButton" style="display:none"></button>
 
 
 <script>
-    document.getElementById("incorrectButton").onclick = async () => {
-        await incorrectResponse();
-    };
+    document.addEventListener("DOMContentLoaded", async function (event) {
+        document.getElementById("version").innerHTML += await version()
+        document.getElementById("model-service-version").innerHTML += await ModelServiceVersion()
+
+    });
+        document.getElementById("incorrectButton").onclick = async () => {
+            await incorrectResponse();
+        };
         document.getElementById('myForm').addEventListener('submit', async function (e) {
             e.preventDefault(); // prevent the default page reload
 
@@ -67,31 +75,49 @@
             }
         });
 
-    function removeReviewText(){
-        document.getElementById("cross").style.display = "none";
-        document.getElementById("check").style.display = "none";
-        document.getElementById('response').innerHTML = "";
-        document.getElementById("incorrectButton").style.display = "none";
+        function removeReviewText() {
+            document.getElementById("cross").style.display = "none";
+            document.getElementById("check").style.display = "none";
+            document.getElementById('response').innerHTML = "";
+            document.getElementById("incorrectButton").style.display = "none";
 
-    }
-
-    async function incorrectResponse() {
-        try {
-            const response = await fetch('/api/incorrectPrediction', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ "input": inputText, "isPositive": isPositive }),
-            });
-            removeReviewText();
-        } catch (err) {
-            console.error('Error:', err);
-            alert('Network error');
         }
+
+        async function incorrectResponse() {
+            try {
+                const response = await fetch('/api/incorrectPrediction', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ "input": inputText, "isPositive": isPositive }),
+                });
+                removeReviewText();
+            } catch (err) {
+                console.error('Error:', err);
+                alert('Network error');
+            }
     }
 
+        async function version() {
+            try {
+                const response = await fetch('/api/version/');
+                return await response.text();
+            } catch (err) {
+                console.error('Error:', err);
+                alert('Network error');
+            }
+        }
+    async function ModelServiceVersion() {
+            try {
+                const response = await fetch('/api/version/model-service/');
+                return await response.text();
+            } catch (err) {
+                console.error('Error:', err);
+                alert('Network error');
+            }
+        }
 
-</script>
+    </script>
 </body>
 </html>
