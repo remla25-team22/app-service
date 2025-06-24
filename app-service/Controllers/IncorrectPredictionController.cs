@@ -25,10 +25,9 @@ public class IncorrectPredictionController : ControllerBase
     {
         MetricsRegistry.IncorrectPredictions.Inc();
 
-        MetricsRegistry.IncorrectPredictionsExperiment
-               .Labels(input.ModelVersion)
-               .Inc();
-               
+        var ver = Request.Headers["X-Model-Version"].FirstOrDefault() ?? "unknown";
+        MetricsRegistry.IncorrectPredictionsExperiment.Labels(ver).Inc();
+
         MetricsRegistry.UpdateIncorrectGauge();
         return Ok();
         
