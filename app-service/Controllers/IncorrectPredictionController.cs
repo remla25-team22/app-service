@@ -24,7 +24,14 @@ public class IncorrectPredictionController : ControllerBase
     public IActionResult Post([FromBody] IncorrectPredictionInput input)
     {
         MetricsRegistry.IncorrectPredictions.Inc();
+
+        MetricsRegistry.IncorrectPredictionsExperiment
+               .Labels(input.ModelVersion)
+               .Inc();
+               
         MetricsRegistry.UpdateIncorrectGauge();
         return Ok();
+        
     }
+    
 }

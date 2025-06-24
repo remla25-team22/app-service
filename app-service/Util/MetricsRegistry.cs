@@ -24,4 +24,14 @@ public static class MetricsRegistry
     {
         IncorrectPredictionRate.Set(IncorrectPredictions.Value/Predictions.Value);
     }
+
+    public static readonly Counter IncorrectPredictionsExperiment =
+        Metrics.CreateCounter(
+            "incorrect_prediction_count_experiment",
+            "Incorrect predictions per model version",
+            new CounterConfiguration
+            {
+                LabelNames = new[] { "model_version" }
+            });
+
 }
