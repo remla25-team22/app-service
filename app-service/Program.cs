@@ -10,12 +10,12 @@ builder.Logging.AddConsole();
 builder.Services.AddControllers();
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(opt =>
-{
-    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-    string xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-    opt.IncludeXmlComments(xmlPath);
-});
+// builder.Services.AddSwaggerGen(opt =>
+// {
+//     var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+//     string xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+//     opt.IncludeXmlComments(xmlPath);
+// });
 
 WebApplication app = builder.Build();
 
