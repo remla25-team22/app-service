@@ -23,12 +23,13 @@ public class VersionController(IApiClient apiClient) : ControllerBase
 
         return Ok(VersionUtil.CurrentVersion);
     }
+    
     /// <summary>
     ///     Gets the current version of the model-service API.
     /// </summary>
     /// <response code="200">Current model-service version</response>
-    /// <response code="500">Internal server error while accessing version</response>
-    [HttpGet("model-service")]
+    [HttpGet("model-service")]    /// <response code="500">Internal server error while accessing version</response>
+
     [ProducesResponseType(typeof(Version), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> Get_Model_Version()
