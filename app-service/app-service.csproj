@@ -7,8 +7,8 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<ContainerRepository>app-service</ContainerRepository>
         <UserSecretsId>62ba1d56-edc0-49ac-a832-b64ec7b370fd</UserSecretsId>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 	</PropertyGroup>
-	<GenerateDocumentationFile>true</GenerateDocumentationFile>
 	<ItemGroup>
 	    <PackageReference Include="lib-version" Version="1.0.1-pre" />
 	    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.21.0" />
