@@ -7,8 +7,6 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<ContainerRepository>app-service</ContainerRepository>
         <UserSecretsId>62ba1d56-edc0-49ac-a832-b64ec7b370fd</UserSecretsId>
-	</PropertyGroup>
-	<PropertyGroup Condition="'$(Configuration)' == 'Debug'">
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 	</PropertyGroup>
 	<ItemGroup>
